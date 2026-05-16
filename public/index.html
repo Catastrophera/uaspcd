@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCL_UM - Parallel Unsharp Masking</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="glow-bg">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+    <div class="cyber-grid"></div>
+
+    <div class="container">
+        <header>
+            <h1><span class="highlight">OCL_UM</span> ENHANCER</h1>
+            <p>Hardware-Accelerated Unsharp Masking via OpenCL GPU</p>
+        </header>
+
+        <main>
+            <div class="control-panel glass-panel">
+                <div class="control-group">
+                    <label>Strength (Lambda) <span id="lambda-val">2.5</span></label>
+                    <input type="range" id="lambda-slider" min="0.1" max="5.0" step="0.1" value="2.5">
+                </div>
+                <div class="control-group">
+                    <label>Radius (N) <span><span id="n-val">5</span> px</span></label>
+                    <input type="range" id="n-slider" min="3" max="15" step="2" value="5">
+                </div>
+            </div>
+
+            <div class="action-panel">
+                <div class="upload-section glass-panel" id="drop-zone">
+                    <input type="file" id="file-input" accept="image/png, image/jpeg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;">
+                    <div class="upload-content">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <h3>Drag & Drop Image Here</h3>
+                        <p>or click to browse files</p>
+                    </div>
+                </div>
+                <button id="btn-benchmark" class="btn-glow">RUN BENCHMARK</button>
+            </div>
+
+            <div class="loader-container" id="loader" style="display: none;">
+                <div class="loader"></div>
+                <p>PROCESSING ON GPU...</p>
+            </div>
+
+            <div class="result-section" id="result-section" style="display: none;">
+                <div class="comparison-container glass-panel">
+                    <div class="slider-wrapper">
+                        <img id="image-after" src="" alt="After Enhancement">
+                        <div class="slider-before">
+                            <img id="image-before" src="" alt="Before Enhancement">
+                        </div>
+                        <div class="slider-handle"></div>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="comparison-slider">
+                    </div>
+                    <div class="labels">
+                        <span class="label before">ORIGINAL</span>
+                        <span class="label after">ENHANCED</span>
+                    </div>
+                </div>
+
+                <div class="metrics-panel glass-panel">
+                    <h2><span class="highlight">PERFORMANCE</span> METRICS</h2>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-title">GPU TIME</span>
+                            <span class="metric-value highlight" id="m-gpu">0.00 ms</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-title">CPU BASELINE</span>
+                            <span class="metric-value text-muted" id="m-cpu">0.00 ms</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-title">SPEEDUP</span>
+                            <span class="metric-value highlight-alt" id="m-speedup">0.00x</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-title">ENTROPY Δ</span>
+                            <span class="metric-value" id="m-entropy">+0.00</span>
+                        </div>
+                    </div>
+                    <div class="terminal-box">
+                        <div class="terminal-header">Terminal Output</div>
+                        <pre id="terminal-output">Ready.</pre>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Benchmark Modal -->
+        <div id="bench-modal" class="modal" style="display: none;">
+            <div class="modal-content glass-panel">
+                <span class="close-btn">&times;</span>
+                <h2>BENCHMARK RESULTS</h2>
+                <div class="chart-container">
+                    <canvas id="benchChart"></canvas>
+                </div>
+                <div id="bench-log" class="terminal-box" style="margin-top: 1.5rem;">
+                    <div class="terminal-header">Benchmark Logs</div>
+                    <pre id="bench-output">Waiting to start...</pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
