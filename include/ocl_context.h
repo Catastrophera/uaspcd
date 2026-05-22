@@ -1,6 +1,7 @@
 #ifndef OCL_CONTEXT_H
 #define OCL_CONTEXT_H
 
+#define CL_TARGET_OPENCL_VERSION 120
 #include <CL/cl.h>
 
 // Struktur konteks OpenCL untuk mempermudah passing data

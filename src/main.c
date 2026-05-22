@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
 
     int n = argc > 3 ? atoi(argv[3]) : GAUSS_N;
     if (n % 2 == 0) n += 1;
-    if (n > 15) n = 15;
+    if (n > 13) n = 13;
     if (n < 3) n = 3;
 
     float lambda = argc > 4 ? atof(argv[4]) : UM_LAMBDA;
@@ -149,16 +149,25 @@ int main(int argc, char** argv) {
     size_t localSize[2] = { WG_SIZE_X, WG_SIZE_Y };
 
     cl_event event;
-    clEnqueueNDRangeKernel(ocl.queue, ocl.kernel, 2, NULL, globalSize, localSize, 0, NULL, &event);
-    clWaitForEvents(1, &event);
-    clReleaseEvent(event);
+    cl_int err = clEnqueueNDRangeKernel(ocl.queue, ocl.kernel, 2, NULL, globalSize, localSize, 0, NULL, &event);
+    if (err != CL_SUCCESS) {
+        fprintf(stderr, "Error: clEnqueueNDRangeKernel failed with code %d\n", err);
+    } else {
+        err = clWaitForEvents(1, &event);
+        if (err != CL_SUCCESS) {
+            fprintf(stderr, "Error: clWaitForEvents failed with code %d\n", err);
+        }
+        clReleaseEvent(event);
+    }
     t_end = get_time_ms();
     printf("GPU UM processing (Kernel Launch): %.2f ms\n", t_end - t_start);
 
     // 7. Download Results
     t_start = get_time_ms();
     float* dstGPU = (float*)malloc(W * H * 4 * sizeof(float));
-    downloadFromDevice(ocl.queue, bufDst, W * H * 4 * sizeof(float), dstGPU);
+    if (!downloadFromDevice(ocl.queue, bufDst, W * H * 4 * sizeof(float), dstGPU)) {
+        fprintf(stderr, "Error: Failed to download results from device\n");
+    }
     t_end = get_time_ms();
     printf("Download from Device: %.2f ms\n", t_end - t_start);
 

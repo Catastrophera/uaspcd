@@ -2,7 +2,7 @@
 #define WG_SIZE_Y 16
 #define BX 2
 #define BY 2
-#define MAX_N 15 // batas max template size jika diperlukan
+#define MAX_N 13 // batas max template size jika diperlukan
 #define TILE_W WG_SIZE_X
 #define TILE_H WG_SIZE_Y
 

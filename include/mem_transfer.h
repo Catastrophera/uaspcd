@@ -1,6 +1,7 @@
 #ifndef MEM_TRANSFER_H
 #define MEM_TRANSFER_H
 
+#define CL_TARGET_OPENCL_VERSION 120
 #include <CL/cl.h>
 
 // Buat buffer di device
